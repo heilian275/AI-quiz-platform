@@ -8,7 +8,9 @@
         </div>
         <div class="header-title">AI智能刷题平台</div>
         <div class="header-user">
-          <el-button type="text" class="logout-button" @click="logout">退出登录</el-button>
+          <el-button type="text" class="logout-button" @click="logout"
+            >退出登录</el-button
+          >
         </div>
       </div>
     </el-header>
@@ -18,7 +20,7 @@
       <el-aside class="aside-menu" width="240px">
         <el-menu router :default-active="activeMenu" active-text-color="#ffd04b" @select="handleMenuSelect">
           <template v-for="menu in serverMenus" :key="menu.id">
-            <el-sub-menu v-if="menu.children && menu.children.length" :index="menu.routePath">
+            <el-sub-menu v-if="menu.children && menu.children.length" :index="menu.id.toString()">
               <template #title>
                 <span>{{ menu.name }}</span>
               </template>
@@ -42,21 +44,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useStorage } from "@vueuse/core";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { Menu } from "../model/Model8080"; // 确保路径正确
 
 const router = useRouter();
+const route = useRoute();
+
 const username = useStorage("serverUsername", "");
 const userId = useStorage("serverUserId", "");
 const serverMenus = useStorage<Menu[]>("serverMenus", []);
 
 const activeMenu = ref<string>("");
 
+
 const defaultActiveMenu = computed(() => {
-  return router.currentRoute.value.path;
+    return route.path;
 });
+watch(defaultActiveMenu,(newVal)=>{
+    activeMenu.value = newVal
+})
 
 
 function handleMenuSelect(index: string) {
@@ -70,92 +78,6 @@ function handleMenuSelect(index: string) {
       console.error("Navigation error:", err);
     });
 }
-
-onMounted(() => {
-    activeMenu.value = router.currentRoute.value.path;
-    serverMenus.value = [
-      {
-        id: 1,
-        name: "题目管理",
-        routePath: "/main/question-management", // 父级菜单路径，用于唯一标识
-        children: [
-          {
-            id: 11,
-            name: "题目列表",
-            routePath: "/main/question-list", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 12,
-            name: "添加题目",
-            routePath: "/main/add-question", // 实际路由
-            role: "admin",
-          },
-        ],
-      },
-      {
-        id: 2,
-        name: "题库列表",
-        routePath: "/main/question-bank",  // 父级菜单路径，用于唯一标识
-        children: [
-          {
-            id: 21,
-            name: "题库广场",
-            routePath: "/main/question-bank/public", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 22,
-            name: "我的题库",
-            routePath: "/main/question-bank/my", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 23,
-            name: "收藏题库",
-            routePath: "/main/question-bank/collection", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 24,
-            name: "AI题库",
-            routePath: "/main/question-bank/ai", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 25,
-            name: "新建题库",
-            routePath: "/main/question-bank/create", // 实际路由
-            role: "admin",
-          },
-        ],
-      },
-      {
-        id: 3,
-        name: "学习资料",
-        routePath: "/main/learning-materials",  // 父级菜单路径，用于唯一标识
-        children: [
-          {
-            id: 31,
-            name: "我的学习资料",
-            routePath: "/main/learning-materials/my", // 实际路由
-            role: "admin",
-          },
-          {
-            id: 32,
-            name: "新建学习资料",
-            routePath: "/main/learning-materials/create", // 实际路由
-            role: "admin",
-          },
-        ],
-      },
-      {
-        id: 4,
-        name: "个人中心",
-         routePath: "/main/profile",// 实际路由
-      }
-    ];
-});
 
 function logout() {
   useStorage("serverToken", "");

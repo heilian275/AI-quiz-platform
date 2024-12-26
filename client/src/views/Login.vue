@@ -24,9 +24,8 @@
 
         <el-form-item label="角色" prop="role">
           <el-radio-group v-model="dto.role">
-            <el-radio label="sale_sperson">销售人员</el-radio>
-            <el-radio label="sales_administrator">销售管理员</el-radio>
-            <el-radio label="warehouse_keeper">仓库管理员</el-radio>
+            <el-radio label="user">用户</el-radio>
+            <el-radio label="admin">管理员</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -60,7 +59,7 @@ const router = useRouter();
 const dto = ref({
   username: "",
   password: "",
-  role: "sale_sperson", // 默认选中“销售人员”
+  role: "admin",
 });
 const loginForm = ref();
 

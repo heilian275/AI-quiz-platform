@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // 配置 @ 指向 src
+      "@": path.resolve(__dirname, "./src"), // 配置 @ 指向 src
     },
   },
   server: {
@@ -15,10 +15,11 @@ export default defineConfig({
     // 以下代码可以使局域网内（公司）的用户都可以访问
     // host: "0.0.0.0"
     proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      }
-    }
-  }
-})
+      "/api": {
+        // target: "http://localhost:8080",
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+    },
+  },
+});
