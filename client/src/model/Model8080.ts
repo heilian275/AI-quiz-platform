@@ -107,11 +107,11 @@ export interface LoginDto {
     name: string,
     // icon?: string,
     routePath?: string,
-    role: string
+    role?: string
     // routeComponent?: string,
     // routeName?: string,
     // routeParentName?: string,
-    // children?: Menu[]
+    children?: Menu[]
   }
   
 

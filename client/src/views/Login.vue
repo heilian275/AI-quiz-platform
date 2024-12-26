@@ -1,15 +1,15 @@
 <template>
-  <div class="login-page"> <!-- 登录页面根容器 -->
+  <div class="login-page">
+    <!-- 登录页面根容器 -->
     <div class="login">
       <el-form :model="dto" :rules="rules" ref="loginForm" label-width="100px">
-
-        <h2 class="login-title">公司销售管理系统</h2>
+        <h2 class="login-title">AI智能刷题平台</h2>
 
         <el-form-item label="用户名" prop="username">
           <el-input
             v-model="dto.username"
             placeholder="请输入用户名"
-            @keyup.enter="onLogin" 
+            @keyup.enter="onLogin"
           />
         </el-form-item>
 
@@ -18,7 +18,7 @@
             type="password"
             v-model="dto.password"
             placeholder="请输入密码"
-            @keyup.enter="onLogin" 
+            @keyup.enter="onLogin"
           />
         </el-form-item>
 
@@ -33,7 +33,6 @@
         <el-form-item>
           <el-button type="primary" @click="onLogin">登录</el-button>
         </el-form-item>
-
       </el-form>
     </div>
   </div>
@@ -41,30 +40,39 @@
 
 <script setup lang="ts">
 // 同上，保持原有逻辑
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from '../api/request'; 
-import { Menu } from '../model/Menu';
-import { useRequest } from 'vue-request'
-import { useStorage } from '@vueuse/core';
-import { LoginDto, AxiosRespMenuAndRoute } from '../model/Model8080'
-import { addServerRoutes, resetRoutes, serverMenus, serverToken, serverUsername, serverUserId } from '../router/index'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "../api/request";
+import { Menu } from "../model/Menu";
+import { useRequest } from "vue-request";
+import { useStorage } from "@vueuse/core";
+import { LoginDto, AxiosRespMenuAndRoute } from "../model/Model8080";
+import {
+  addServerRoutes,
+  resetRoutes,
+  serverMenus,
+  serverToken,
+  serverUsername,
+  serverUserId,
+} from "../router/index";
 
 const router = useRouter();
 const dto = ref({
-  username: '',
-  password: '',
-  role: 'sale_sperson' // 默认选中“销售人员”
+  username: "",
+  password: "",
+  role: "sale_sperson", // 默认选中“销售人员”
 });
 const loginForm = ref();
 
 const rules = ref({
-  username: [{ required: true, message: '用户名必填', trigger: 'blur' }],
-  password: [{ required: true, message: '密码必填', trigger: 'blur' }],
+  username: [{ required: true, message: "用户名必填", trigger: "blur" }],
+  password: [{ required: true, message: "密码必填", trigger: "blur" }],
 });
 
-const { runAsync: login } = useRequest<AxiosRespMenuAndRoute, [LoginDto]>((dto) =>
-  axios.post('/api/auth/login', dto), { manual: true })
+const { runAsync: login } = useRequest<AxiosRespMenuAndRoute, [LoginDto]>(
+  (dto) => axios.post("/api/auth/login", dto),
+  { manual: true }
+);
 
 async function onLogin() {
   try {
@@ -73,7 +81,7 @@ async function onLogin() {
       const loginResp = await login(dto.value);
       if (loginResp.data.code === 1) {
         resetRoutes();
-        
+
         const token = loginResp.data.data.token;
         serverToken.value = token;
         serverUsername.value = parseJwt(token).username;
@@ -84,7 +92,7 @@ async function onLogin() {
         serverMenus.value = menuResp;
         addServerRoutes(routerResp);
 
-        router.push('/main');
+        router.push("/main");
       }
     }
   } catch (e) {
@@ -98,15 +106,15 @@ onMounted(() => {
 
 function parseJwt(token: string) {
   if (!token) {
-    return '';
+    return "";
   }
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   const jsonPayload = decodeURIComponent(
     atob(base64)
-      .split('')
-      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-      .join('')
+      .split("")
+      .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+      .join("")
   );
   return JSON.parse(jsonPayload);
 }
@@ -120,9 +128,8 @@ function parseJwt(token: string) {
   align-items: center; /* 垂直居中 */
   height: 100vh; /* 占满整个屏幕 */
   width: 100vw; /* 占满整个屏幕 */
-  background-color: #4196F2;
+  background-color: #4196f2;
 }
-
 
 /* 登录框样式 */
 .login {
@@ -133,7 +140,7 @@ function parseJwt(token: string) {
   border-radius: 12px; /* 圆角 */
 }
 
-.login-title{
+.login-title {
   color: #333;
   text-align: center;
   margin-top: 10px;
