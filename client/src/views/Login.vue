@@ -64,7 +64,7 @@ const router = useRouter();
 const dto = ref({
   username: "",
   password: "",
-  role: "admin",
+  role: "user",
 });
 const loginForm = ref();
 
