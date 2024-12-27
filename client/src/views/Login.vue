@@ -32,6 +32,11 @@
         <el-form-item>
           <el-button type="primary" @click="onLogin">登录</el-button>
         </el-form-item>
+
+        <!-- 注册入口 -->
+        <div class="register-entry">
+          <router-link to="/register">没有账号？立即注册</router-link>
+        </div>
       </el-form>
     </div>
   </div>
@@ -155,5 +160,13 @@ function parseJwt(token: string) {
 /* 单选框样式 */
 .el-radio-group {
   margin: 15px 0; /* 增加上下的间距 */
+}
+
+.register-entry a {
+  color: #4196f2;
+  text-decoration: none;
+}
+.register-entry a:hover {
+  text-decoration: underline;
 }
 </style>
